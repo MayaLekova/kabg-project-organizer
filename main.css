@@ -1,0 +1,8 @@
+.member { 
+    display: inline; 
+    padding: 2px;
+}
+
+.card-name {
+    width: 50%;
+}
