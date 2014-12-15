@@ -11,6 +11,10 @@ var gMembers = [],
     gCards = [],
     gActiveTasks = [];
 
+function dateToExcelString (date) {
+    return date.getUTCFullYear() + '-' + (date.getUTCMonth() + 1) + '-' + date.getUTCDate();
+};
+
 var gatherCards = function() {
     $cards.empty();
     $.each(gCards, function(ix, card) {
@@ -27,7 +31,7 @@ var gatherCards = function() {
             ? gMembers[card.idMembers[0]].fullName : "no one";
         $("<td>").text(asignee).appendTo(row);
         
-        var dueDate = card.due ? new Date(card.due).toDateString() : "no date";
+        var dueDate = card.due ? dateToExcelString(new Date(card.due)) : "no date";
         $("<td>").text(dueDate).appendTo(row);
         
         row.appendTo($tasks);
