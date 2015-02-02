@@ -51,18 +51,20 @@ var gatherCards = function() {
         $("<td class='card-name'>").text(card.name).appendTo(row);
         
         var priorityCell = $("<td>");
-        if(card.labels.length > 0)
-        { 
+        if(card.labels.length > 0) { 
             priorityCell.text(priorityOf(card));
-        }
-        else
-        {
+        } else {
             priorityCell.text(priorities.none);
         }
         priorityCell.appendTo(row);
         
-        var asignee = (card.idMembers.length > 0 && gMembers[card.idMembers[0]])
-            ? gMembers[card.idMembers[0]].fullName : "no one";
+        var asignee = "no one";
+        if(card.idMembers.length > 0) {
+            var memberNames = card.idMembers.map(function(id) {
+                return gMembers[id] ? gMembers[id].fullName : undefined;
+            });
+            asignee = _.compact(memberNames).join(',');
+        }
         $("<td>").text(asignee).appendTo(row);
         
         var dueDate = card.due ? dateToExcelString(new Date(card.due)) : "no date";
