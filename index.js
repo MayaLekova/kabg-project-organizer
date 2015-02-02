@@ -15,6 +15,29 @@ function dateToExcelString (date) {
     return date.getUTCFullYear() + '-' + (date.getUTCMonth() + 1) + '-' + date.getUTCDate();
 };
 
+var priorities = {
+    red: 0,
+    orange: 1,
+    yellow: 2,
+    green: 3,
+    none: 1000
+}
+
+var priorityOf = function(card) {
+    
+    var labelNames = _.pluck(card.labels, 'color');
+    if(labelNames.length == 0) {// for some reason
+        return priorities[none];
+    }
+    
+    var maxPriority = _.max(labelNames, function(name) { 
+        return priorities[name]; 
+        
+    });
+    
+    return priorities[maxPriority];
+}
+
 var gatherCards = function() {
     $cards.empty();
     $.each(gCards, function(ix, card) {
@@ -27,6 +50,17 @@ var gatherCards = function() {
         
         $("<td class='card-name'>").text(card.name).appendTo(row);
         
+        var priorityCell = $("<td>");
+        if(card.labels.length > 0)
+        { 
+            priorityCell.text(priorityOf(card));
+        }
+        else
+        {
+            priorityCell.text(priorities.none);
+        }
+        priorityCell.appendTo(row);
+        
         var asignee = (card.idMembers.length > 0 && gMembers[card.idMembers[0]])
             ? gMembers[card.idMembers[0]].fullName : "no one";
         $("<td>").text(asignee).appendTo(row);
@@ -35,8 +69,6 @@ var gatherCards = function() {
         $("<td>").text(dueDate).appendTo(row);
         
         row.appendTo($tasks);
-        
-        //link.appendTo($cards);
     });
 };
 
